@@ -6,6 +6,6 @@
 /* Includes ------------------------------------------------------------------*/
 
 float HexToDecimal(unsigned char *Byte,int num);
-void DecimalToHex(float floatnum,unsigned char* Byte);
+void DecimalToHex(float floatnum, char* Byte);
 
 #endif /* */

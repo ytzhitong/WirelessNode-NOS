@@ -240,7 +240,7 @@ void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc)
 //进入STANDBY模式低功耗，使用RTC功能唤醒，其中standbytime单位为S，如设置1，低功耗1秒后唤醒
 void enter_standby_rtc(u16 standbytime)
 {
-	uint32_t i;		//局部变量，用于计算低功耗时长
+//	uint32_t i;		//局部变量，用于计算低功耗时长
 	system_power_config();
 	
 	if(__HAL_PWR_GET_FLAG(PWR_FLAG_SB) != RESET)
@@ -323,10 +323,10 @@ void enter_sleep_rtc(float sleeptime)
 //低功耗关闭项
 void system_power_config(void)
 {
-	GPIO_InitTypeDef GPIO_InitStructure = {0};
+//	GPIO_InitTypeDef GPIO_InitStructure = {0};
 
-	/* Enable Power Control clock */
-	__HAL_RCC_PWR_CLK_ENABLE();
+//	/* Enable Power Control clock */
+//	__HAL_RCC_PWR_CLK_ENABLE();
 
 	/* Enable Ultra low power mode */
 //	HAL_PWREx_EnableUltraLowPower();

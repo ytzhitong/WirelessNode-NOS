@@ -31,7 +31,7 @@ void uart5_init(u32 bound)
     //UART 初始化设置
 	
 		UART5_Handler.Instance = UART5;
-		UART5_Handler.Init.BaudRate = 115200;
+		UART5_Handler.Init.BaudRate = bound;
 		UART5_Handler.Init.WordLength = UART_WORDLENGTH_8B;
 		UART5_Handler.Init.StopBits = UART_STOPBITS_1;
 		UART5_Handler.Init.Parity = UART_PARITY_NONE;
@@ -99,9 +99,10 @@ void UART5_RX_task(void)
 			{ 
 				run.uart5tx_flag=1;
         //读取flash
-				W25QXX_ReadCNT();
-				sprintf((char*)uart_temp, "flashCNT:%d\n",W25Q128_CNTT );
-			  HAL_UART_Transmit(&UART5_Handler,(uint8_t *)uart_temp,strlen((char *)uart_temp),1);				
+//				W25QXX_ReadCNT();
+//				W25Q128_CNTT=0xFFFF;
+//				sprintf((char*)uart_temp, "flashCNT:%d\n",W25Q128_CNTT );
+//			  HAL_UART_Transmit(&UART5_Handler,(uint8_t *)uart_temp,strlen((char *)uart_temp),1);				
 //				HAL_UART_Transmit(&UART5_Handler,(uint8_t *)"\n",1,1);
 				
         for(i=0;i<W25Q128_CNTT;i++)
@@ -118,8 +119,8 @@ void UART5_RX_task(void)
 			{ 
 				run.uart5tx_flag=1;
         //擦除flash
-					W25Q128_CNTT=0;
-					W25QXX_WriteCNT();
+//					W25Q128_CNTT=0;
+//					W25QXX_WriteCNT();
 //        for(i=0;i<W25Q128_CNTT;i++)
 //				{
 //					W25QXX_Read((u8*)uart_temp,i*60+2,60);

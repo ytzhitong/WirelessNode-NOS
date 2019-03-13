@@ -1,6 +1,8 @@
-#ifndef __TIMER_H
-#define __TIMER_H
+#ifndef _USART2_H
+#define _USART2_H
 #include "sys.h"
+#include "stdio.h"
+#include "usart.h"
 
 /*********************************************************************************
 			  ___   _     _____  _____  _   _  _____  _____  _   __
@@ -13,33 +15,36 @@
  *	******************************************************************************
  *	本程序只供学习使用，未经作者许可，不得用于其它任何用途
  *	ALIENTEK Pandora STM32L475 IOT开发板
- *	定时器中断驱动代码
+ *	串口1初始化
  *	正点原子@ALIENTEK
  *	技术论坛:www.openedv.com
- *	创建日期:2018/10/27
+ *	修改日期:2015/6/23
  *	版本：V1.0
  *	版权所有，盗版必究。
- *	Copyright(C) 广州市星翼电子科技有限公司 2014-2024
+ *	Copyright(C) 广州市星翼电子科技有限公司 2009-2024
  *	All rights reserved
  *	******************************************************************************
- *	初始版本
+ *	V1.0修改说明
  *	******************************************************************************/
 
-void TIM3_Init(u16 arr, u16 psc);
 
-typedef struct _run_ {
- 
-	u16 uart5_cnt;
-	u16 uart2_cnt;
-	u16 LED_cnt;
-	u16 TEST_cnt;
-	
-	u8 uart5tx_flag;
-	
-}_RUN;
+//#define USART_REC_LEN  			60  	//定义最大接收字节数 200
+//#define EN_USART1_RX 			1		//使能（1）/禁止（0）串口1接收
 
-extern _RUN run;
+//extern char  USART_RX_BUF[USART_REC_LEN]; //接收缓冲,最大USART_REC_LEN个字节.末字节为换行符
+//extern u16 USART_RX_STA;         		//接收状态标记
+extern UART_HandleTypeDef UART2_Handler; //UART2句柄
+
+//#define RXBUFFERSIZE   1 //缓存大小
+//extern u8 aRxBuffer[RXBUFFERSIZE];//HAL库USART接收Buffer
+
+//如果想串口中断接收，请不要注释以下宏定义
+void uart2_init(u32 bound);
+
+void UART2_RX_task(void);
+
+extern UART_RX UART2_RX;
+
 #endif
-
 
 

@@ -48,12 +48,12 @@ typedef struct
 bme280Calib  bme280Cal;
 
 static u8 bme280ID=0;
-static bool isInit=false;
+//static bool isInit=false;
 static s32 bme280RawPressure=0;
 static s32 bme280RawTemperature=0;
 static s32 bme280RawHumidity=0;
 
-static void presssureFilter(float* in,float* out);
+//static void presssureFilter(float* in,float* out);
 static float bme280PressureToAltitude(float* pressure/*, float* groundPressure, float* groundTemp*/);
 
 //char uart_temp[100];
@@ -396,46 +396,54 @@ static float bme280PressureToAltitude(float* pressure/*, float* groundPressure, 
     }
 }
 
-#define FILTER_NUM	5
-#define FILTER_A	0.1f
+//#define FILTER_NUM	5
+//#define FILTER_A	0.1f
 
-/*限幅平均滤波法*/
-static void presssureFilter(float* in,float* out)
-{	
-	static u8 i=0;
-	static float filter_buf[FILTER_NUM]={0.0};
-	double filter_sum=0.0;
-	u8 cnt=0;	
-	float deta;
+///*限幅平均滤波法*/
+//static void presssureFilter(float* in,float* out)
+//{	
+//	static u8 i=0;
+//	static float filter_buf[FILTER_NUM]={0.0};
+//	double filter_sum=0.0;
+//	u8 cnt=0;	
+//	float deta;
 
-	if(filter_buf[i]==0.0f)
-	{
-		filter_buf[i]=*in;
-		*out=*in;
-		if(++i>=FILTER_NUM)	
-			i=0;
-	} 
-	else 
-	{
-		if(i)
-			deta=*in-filter_buf[i-1];
-		else 
-			deta=*in-filter_buf[FILTER_NUM-1];
-		
-		if(fabs(deta)<FILTER_A)
-		{
-			filter_buf[i]=*in;
-			if(++i>=FILTER_NUM)	
-				i=0;
-		}
-		for(cnt=0;cnt<FILTER_NUM;cnt++)
-		{
-			filter_sum+=filter_buf[cnt];
-		}
-		*out=filter_sum /FILTER_NUM;
-	}
+//	if(filter_buf[i]==0.0f)
+//	{
+//		filter_buf[i]=*in;
+//		*out=*in;
+//		if(++i>=FILTER_NUM)	
+//			i=0;
+//	} 
+//	else 
+//	{
+//		if(i)
+//			deta=*in-filter_buf[i-1];
+//		else 
+//			deta=*in-filter_buf[FILTER_NUM-1];
+//		
+//		if(fabs(deta)<FILTER_A)
+//		{
+//			filter_buf[i]=*in;
+//			if(++i>=FILTER_NUM)	
+//				i=0;
+//		}
+//		for(cnt=0;cnt<FILTER_NUM;cnt++)
+//		{
+//			filter_sum+=filter_buf[cnt];
+//		}
+//		*out=filter_sum /FILTER_NUM;
+//	}
+//}
+
+
+
+void BME280_CONFIG(void)
+{
+	iicDevWriteByte(BME280_ADDR,BME280_CTRL_HUM,BME280_HUMIDITY_OSR);
+	iicDevWriteByte(BME280_ADDR,BME280_CTRL_MEAS_REG,BME280_MODE);
+	iicDevWriteByte(BME280_ADDR,BME280_CONFIG_REG,0XA0);		               /*配置IIR滤波*/	
 }
-
 
 bool bme280Init(void)
 {	
@@ -469,15 +477,14 @@ bool bme280Init(void)
 
     /* 读取校准数据 */
   BME280_GET_CIL(BME280_ADDR,(u8 *)&bme280Cal);
-	iicDevWriteByte(BME280_ADDR,BME280_CTRL_HUM,BME280_HUMIDITY_OSR);
-	iicDevWriteByte(BME280_ADDR,BME280_CTRL_MEAS_REG,BME280_MODE);
-	iicDevWriteByte(BME280_ADDR,BME280_CONFIG_REG,0XA8);		               /*配置IIR滤波*/
+	BME280_CONFIG();
+	delay_ms(100);
 	
 //	printf("BME280 Calibrate Registor Are: \r\n");
 //	for(i=0;i<24;i++)
 //		printf("Registor %2d: 0x%X\n",i,p[i]);
 	
-    isInit=true;
+//    isInit=true;
     return true;
 }
 
@@ -555,10 +562,14 @@ void bme280GetData(float* pressure,float* temperature,float* humidity,float* asl
 	p=bme280CompensateP(bme280RawPressure)/25600.0;	
 	h=bme280CompensateH(bme280RawHumidity)/1024.0;  // bme280RawHumidity/1024.0;
 
-	presssureFilter(&p,pressure);
+  *pressure=(float)p;
+//	presssureFilter(&p,pressure);
 	*temperature=(float)t;                                                     /*单位度*/
 //	*pressure=(float)p ;	                                                   /*单位hPa*/	
 	*humidity=(float)h;
 	
 	*asl=bme280PressureToAltitude(pressure);	                               /*转换成海拔*/	
+
+  BME280_CONFIG();	
+	
 }

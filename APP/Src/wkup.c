@@ -79,7 +79,7 @@ void WKUP_Init(void)
     GPIO_InitTypeDef GPIO_Initure;
     __HAL_RCC_GPIOA_CLK_ENABLE();			//开启GPIOC时钟
 	
-    GPIO_Initure.Pin=GPIO_PIN_0;           //PC13
+    GPIO_Initure.Pin=GPIO_PIN_0;           //PA0
     GPIO_Initure.Mode=GPIO_MODE_IT_RISING;  //中断,上升沿
     GPIO_Initure.Pull=GPIO_PULLDOWN;        //下拉
     GPIO_Initure.Speed=GPIO_SPEED_FREQ_HIGH;     //快速

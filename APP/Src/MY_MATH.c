@@ -7,7 +7,7 @@ float HexToDecimal(unsigned char *Byte,int num)
 	return *((float*)&Byte);
 }
 
-void DecimalToHex(float floatnum,unsigned char* Byte)
+void DecimalToHex(float floatnum, char* Byte)
 {
 	char* pchar=(char*)&floatnum;
 	for(int i=0;i<sizeof(float);i++)

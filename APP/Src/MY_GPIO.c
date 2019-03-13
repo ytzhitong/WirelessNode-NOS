@@ -34,22 +34,37 @@ void GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(LORA_WAKE_PORT, &GPIO_InitStruct);
 	
-
   GPIO_InitStruct.Pin =  KEY_PIN;
 	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 	HAL_GPIO_Init(KEY_PORT, &GPIO_InitStruct);
 
+  /*Configure GPIO pin :  */
+  GPIO_InitStruct.Pin = MH_CTL_PIN;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(MH_CTL_PORT, &GPIO_InitStruct);
+	
+  /*Configure GPIO pin :  */
+  GPIO_InitStruct.Pin = PM_SET_PIN;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(PM_SET_PORT, &GPIO_InitStruct);
 }
 
 void LED_task(void)
 {
 
-	if(run.LED_cnt>500)
+	if(run.LED_cnt>900)
 	{
-		run.LED_cnt=0;
-		LED_TogglePin;
+		LED(1);
+		if(run.LED_cnt>1000)
+		{
+			run.LED_cnt=0;
+			LED_TogglePin;
+		}
 	}
 		 
-
 }
 

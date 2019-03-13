@@ -47,12 +47,12 @@ void W25QXX_Init(void)
 	W25QXX_TYPE=W25QXX_ReadID();//∂¡»°FLASH ID.  
 
 	
-  W25QXX_ReadCNT();
-	if(W25Q128_CNTT==0xFFFF)
-	{
-		W25Q128_CNTT=0;
-    W25QXX_WriteCNT();
-	}
+//  W25QXX_ReadCNT();
+//	if(W25Q128_CNTT==0xFFFF)
+//	{
+//		W25Q128_CNTT=0;
+//    W25QXX_WriteCNT();
+//	}
 	
 }  
 
@@ -286,19 +286,19 @@ void W25QXX_WAKEUP(void)
 }   
 
 
-void W25QXX_ReadCNT(void)
-{
-	W25QXX_Read(W25Q128_CNT,0,2);
-	W25Q128_CNTT=W25Q128_CNT[0]|(W25Q128_CNT[1]<<8);
+//void W25QXX_ReadCNT(void)
+//{
+//	W25QXX_Read(W25Q128_CNT,0,2);
+//	W25Q128_CNTT=W25Q128_CNT[0]|(W25Q128_CNT[1]<<8);
 
-}
+//}
 
-void W25QXX_WriteCNT(void)
-{
-		W25Q128_CNT[0]=W25Q128_CNTT;
-		W25Q128_CNT[1]=W25Q128_CNTT>>8;
-		W25QXX_Write((u8*)W25Q128_CNT,0,2);
-}
+//void W25QXX_WriteCNT(void)
+//{
+//		W25Q128_CNT[0]=W25Q128_CNTT;
+//		W25Q128_CNT[1]=W25Q128_CNTT>>8;
+//		W25QXX_Write((u8*)W25Q128_CNT,0,2);
+//}
 
 
 

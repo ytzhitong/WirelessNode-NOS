@@ -1,6 +1,7 @@
 #include "timer.h"
 #include "MY_GPIO.h"
 #include "uart5.h"
+#include "usart2.h"
 
 
 /*********************************************************************************
@@ -97,7 +98,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     if(htim == (&TIM3_Handler))
     {
 			//
-      if(UART5_RX.con_flag==1)
+      if(UART5_RX.rx_flag==1)
 			{
 				if(run.uart5_cnt<0xffff)
 				{
@@ -107,6 +108,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 						UART5_RX.con_flag=0;
 						UART5_RX.rx_cnt=0;
 						UART5_RX.rx_flag=0;
+					}
+				}
+		  }
+			
+      if(UART2_RX.rx_flag==1)
+			{
+				if(run.uart2_cnt<0xffff)
+				{
+					run.uart2_cnt++;
+					if(run.uart2_cnt>50)
+					{
+						UART2_RX.con_flag=0;
+						UART2_RX.rx_cnt=0;
+						UART2_RX.rx_flag=0;
+						run.uart2_cnt=0;
+						UART2_RX.check=0;
 					}
 				}
 		  }

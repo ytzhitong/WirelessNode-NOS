@@ -23,7 +23,7 @@
 #define SI1133_SDA_STATE()       HAL_GPIO_ReadPin(SI1133_I2C_PORT, SI1133_SDA_PIN)
 
 
-#define SI1133_PART_ID				  0xA4
+#define SI1133_PART_ID				  0xAA
  
 //*******************************************************//
 //*                   ADCCONFIGx                        *//
@@ -243,11 +243,13 @@ typedef struct {
   COEFF   coeff_low[9];
 } LUX_COEFF;
 
-extern int16_t SI1133_ReadRegister(uint8_t addr);
+extern u8 SI1133_ReadRegister(uint8_t addr);
 extern int16_t SI1133_WriteRegister(uint8_t addr, uint8_t data);
 extern int16_t SI1133_ReadParameter(uint8_t addr);
 extern int16_t SI1133_WriteParameter(uint8_t addr, uint8_t data);
-extern int16_t SI1133_Init(void);
+extern void SI1133_Init(void);
+int16_t SI1133_Init_UvAls(void);
+int16_t SI1133_Reset(void);
 extern int16_t SI1133_NOP(void);
 extern int16_t SI1133_Force(void);
 extern int16_t SI1133_Start (void);
@@ -258,12 +260,6 @@ float Si1133_getUVReading( HANDLE si115x_handle,
                         Si115xSample_t *samples );
 float Si1133_getLuxReading( HANDLE si115x_handle,
                         Si115xSample_t *samples );
-
-//bool bme280Init(void);
-//void bme280GetData(float* pressure, float* temperature,float* humidity,float* asl);
-//	 
-
-//void BME280_Test(void);
 
 
 #ifdef __cplusplus

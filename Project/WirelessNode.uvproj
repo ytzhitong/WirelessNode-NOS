@@ -509,6 +509,16 @@
               <FileType>1</FileType>
               <FilePath>..\APP\Src\SI1133.c</FilePath>
             </File>
+            <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\Src\adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>usart2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\Src\usart2.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

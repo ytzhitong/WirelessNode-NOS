@@ -12,6 +12,8 @@
 #include "string.h"
 #include "SHT2x.h"
 
+u8 cntt=0;
+
 extern u8 SI1133_OK;
 
 Si115xSample_t samples;				//Stores the sample data from reading the sensor
@@ -180,11 +182,11 @@ u8 SI1133_I2cWriteByte(u8 byte)
         {
             SI1133_SDA_LOW();
         }
-        delay_us(2);
+        delay_us(4);
         SI1133_SCL_HIGH();
-        delay_us(2);
+        delay_us(4);
         SI1133_SCL_LOW();   
-        delay_us(2);
+        delay_us(4);
         
         byte <<= 1;
     }
@@ -312,7 +314,7 @@ bool SI1133_GPIO_Init(void)
     return true;
 }
 
-int16_t SI1133_ReadRegister(uint8_t addr)
+u8 SI1133_ReadRegister(uint8_t addr)
 {
 	return SI1133iicDevReadByte(SI1133_PART_ID, addr);
 	 
@@ -407,10 +409,12 @@ int16_t SI1133_WriteParameter(uint8_t addr, uint8_t data)
 	while ((response & RSP0_COUNTER_MASK) == response_stored)
 	{
 		response = SI1133_ReadRegister(REG_RESPONSE0);
+		delay_us(100);
 		cnt++;
-		if(cnt>10)
+		if(cnt>20)
 		{
-			SI1133_OK=0;
+			SI1133_Reset();
+	    delay_ms(10);
 			return 0;
 		}
 	}
@@ -419,7 +423,7 @@ int16_t SI1133_WriteParameter(uint8_t addr, uint8_t data)
 	else   return 0;
 }
  
-static int16_t SI1133_Reset(void)
+ int16_t SI1133_Reset(void)
 {
 	int16_t retval = 0;
 	delay_ms(10);
@@ -481,14 +485,14 @@ int16_t SI1133_Pause(void)
 	}
 	return 0;
 }
-int16_t SI1133_Init(void)
+
+int16_t SI1133_Init_UvAls(void)
 {
 	int16_t    retval;
-	
-	SI1133_GPIO_Init();
-	
+		
 	retval  = SI1133_Reset();
 	delay_ms(10);
+	
 	retval += SI1133_WriteParameter( PARAM_CHAN_LIST, 	0x0f);
 	//UV
 	retval += SI1133_WriteParameter( PARAM_ADCCONFIG0, 	0x78);
@@ -510,22 +514,37 @@ int16_t SI1133_Init(void)
 	retval += SI1133_WriteParameter( PARAM_ADCSENS3, 	0x07);
 	retval += SI1133_WriteParameter( PARAM_ADCPOST3, 	0x40);
 //	retval += SI1133_WriteParameter( PARAM_MEASCONFIG3, 0x40);
- 
-//	retval += SI1133_WriteParameter( PARAM_ADCCONFIG4, 	0x60);
-//	retval += SI1133_WriteParameter( PARAM_ADCSENS4, 	0x89);
-//	retval += SI1133_WriteParameter( PARAM_ADCPOST4, 	0x00);
-//	retval += SI1133_WriteParameter( PARAM_MEASCONFIG4, 0x40);
-// 
-//	retval += SI1133_WriteParameter( PARAM_ADCCONFIG5, 	0x79);
-//	retval += SI1133_WriteParameter( PARAM_ADCSENS5, 	0x89);
-//	retval += SI1133_WriteParameter( PARAM_ADCPOST5, 	0x00);
-//	retval += SI1133_WriteParameter( PARAM_MEASCONFIG5, 0x40);
-// 
-//	retval += SI1133_WriteParameter( PARAM_MEASRATE_H, 	0x09);
-//	retval += SI1133_WriteParameter( PARAM_MEASRATE_L, 	0xc4);
+
 	retval += SI1133_WriteRegister(  REG_IRQ_ENABLE, 	0x0f);
-//	retval += SI1133_Start();
 	return retval;
+}
+
+void SI1133_Init(void)
+{
+	u8 PART_ID;
+	SI1133_GPIO_Init();
+	
+  while(PART_ID !=0x33)
+	{
+		PART_ID=SI1133_ReadRegister(REG_PART_ID);
+		delay_ms(10);
+		cntt++;
+		if(cntt>50)
+		break;
+	}
+		
+  if(cntt>50)
+	{
+		SI1133_OK=0;
+	}
+	else
+	{
+		SI1133_OK=1;
+	}
+
+  SI1133_Init_UvAls();
+	SI1133_Force();
+	
 }
 
 
@@ -559,12 +578,12 @@ void Si1133Handler(Si115xSample_t *samples)
 
 void getSensorData(void)
 {
-	// Start next measurement
-	SI1133_Force();
-
 	// Sensor data ready
 	// Process measurement
 	Si1133Handler(&samples);
+	
+	// Start next measurement
+	SI1133_Force();
 }
 
 //-----------------------------------------------------------------------------

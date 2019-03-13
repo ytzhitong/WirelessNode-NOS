@@ -36,6 +36,9 @@ void SHT2x_Delay(u32 n)
 
 void SHT2x_Init(void)
 {	
+	
+	  u8 UserReg=0;
+	
     __HAL_RCC_GPIOC_CLK_ENABLE();   //Ê¹ÄÜGPIOCÊ±ÖÓ
 	
     GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -51,12 +54,23 @@ void SHT2x_Init(void)
     delay_us(80);
 
     SHT2x_SoftReset();
+		delay_ms(10);
+		
+		UserReg=SHT2x_ReadUserReg();
+		if(UserReg==0x02)
+		{
+			SHT21_OK=1;
+		}
+		else
+		{
+			SHT21_OK=0;
+		}
+		
 }
 
 void SHT2x_SCL_OUTPUT(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
-
 
     GPIO_InitStructure.Pin =  SHT2x_SCL_PIN;
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_OD;
@@ -251,7 +265,7 @@ float SHT2x_MeasureTempHM(void)
 
     while(Bit_RESET == SHT2x_SCL_STATE())
     {
-      delay_us(100);
+      delay_us(1000);
 			cnt++;
 			if(cnt>1000)
 			{
@@ -298,9 +312,9 @@ float SHT2x_MeasureHumiHM(void)
 
     while(Bit_RESET == SHT2x_SCL_STATE())
     {
-      delay_us(100);
+      delay_us(1000);
 			cnt++;
-			if(cnt>1000)
+			if(cnt>500)
 			{
 				SHT21_OK=0;
 				cnt=0;
