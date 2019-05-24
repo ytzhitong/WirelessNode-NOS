@@ -54,7 +54,7 @@ void SHT2x_Init(void)
     delay_us(80);
 
     SHT2x_SoftReset();
-		delay_ms(10);
+		delay_ms(20);
 		
 		UserReg=SHT2x_ReadUserReg();
 		if(UserReg==0x02)

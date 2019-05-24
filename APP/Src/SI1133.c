@@ -297,7 +297,7 @@ void SI1133_Test(void)
 
 bool SI1133_GPIO_Init(void)
 {	
-    __HAL_RCC_GPIOA_CLK_ENABLE();   //使能GPIOA时钟
+    __HAL_RCC_GPIOB_CLK_ENABLE();   //使能GPIOA时钟
 	
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 

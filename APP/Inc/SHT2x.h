@@ -8,8 +8,8 @@
 #include "sys.h"
 	 
 #define SHT2x_I2C_PORT          GPIOC
-#define SHT2x_SCL_PIN           GPIO_PIN_1
-#define SHT2x_SDA_PIN           GPIO_PIN_0
+#define SHT2x_SCL_PIN           GPIO_PIN_3
+#define SHT2x_SDA_PIN           GPIO_PIN_2
 
 #define SHT2x_SCL_HIGH()        HAL_GPIO_WritePin(SHT2x_I2C_PORT,SHT2x_SCL_PIN,GPIO_PIN_SET)
 #define SHT2x_SCL_LOW()         HAL_GPIO_WritePin(SHT2x_I2C_PORT,SHT2x_SCL_PIN,GPIO_PIN_RESET)

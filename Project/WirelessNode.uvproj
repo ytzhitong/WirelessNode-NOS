@@ -519,6 +519,26 @@
               <FileType>1</FileType>
               <FilePath>..\APP\Src\usart2.c</FilePath>
             </File>
+            <File>
+              <FileName>pcf8563.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\Src\pcf8563.c</FilePath>
+            </File>
+            <File>
+              <FileName>FlashFile.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\Src\FlashFile.c</FilePath>
+            </File>
+            <File>
+              <FileName>AT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\Src\AT.c</FilePath>
+            </File>
+            <File>
+              <FileName>iwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\Src\iwdg.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

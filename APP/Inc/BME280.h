@@ -9,8 +9,8 @@
 #include "stdbool.h"
 	 
 #define BME280_I2C_PORT          GPIOC
-#define BME280_SCL_PIN           GPIO_PIN_2
-#define BME280_SDA_PIN           GPIO_PIN_3
+#define BME280_SCL_PIN           GPIO_PIN_14
+#define BME280_SDA_PIN           GPIO_PIN_15
 
 #define BME280_SCL_HIGH()        HAL_GPIO_WritePin(BME280_I2C_PORT,BME280_SCL_PIN,GPIO_PIN_SET)
 #define BME280_SCL_LOW()         HAL_GPIO_WritePin(BME280_I2C_PORT,BME280_SCL_PIN,GPIO_PIN_RESET)

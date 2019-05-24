@@ -5,20 +5,27 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l1xx_hal.h"
-#include "pcf8563.h"
 
-typedef struct _StoreData_
+
+#define WIFI		  1		//定义是否是wifi,否则为LORA
+#define LPOWER		0		//定义是否是低功耗
+#define DEBUG		  0		//定义是否是调试模式
+
+#define WIFI_SEND_REPE 14
+
+#if LPOWER
+ #define LORA_SEND_REPE 2
+#else
+ #define LORA_SEND_REPE 14
+#endif
+typedef enum
 {
-	
-	_PCF8563_Time_Typedef PCF8563_Time;//时间
-	_PCF8563_Date_Typedef PCF8563_Date;//日期
-		
-	float temp; //温度
-	float hum;  //湿度
-	float press; //大气压
-	float uv;    //紫外线系数
-	float lux;   //光照强度
-	
-} _StoreData;
+	LORA_TYPE = 0,
+	WIFI_TYPE = 1,
+} _WIRELESS_TYPE;
+
+ 
+
+void RST_WIFI(void);
 
 #endif /* __MAIN_H */

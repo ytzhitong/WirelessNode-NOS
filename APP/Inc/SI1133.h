@@ -8,10 +8,10 @@
 #include "sys.h"
 #include "stdbool.h"
 	 
-#define SI1133_I2C_PORT          GPIOA
-#define SI1133_SCL_PIN           GPIO_PIN_5
-#define SI1133_SDA_PIN           GPIO_PIN_4
-#define SI1133_INT_PIN           GPIO_PIN_6
+#define SI1133_I2C_PORT          GPIOB
+#define SI1133_SCL_PIN           GPIO_PIN_6
+#define SI1133_SDA_PIN           GPIO_PIN_7
+//#define SI1133_INT_PIN           GPIO_PIN_6
 
 #define SI1133_SCL_HIGH()        HAL_GPIO_WritePin(SI1133_I2C_PORT,SI1133_SCL_PIN,GPIO_PIN_SET)
 #define SI1133_SCL_LOW()         HAL_GPIO_WritePin(SI1133_I2C_PORT,SI1133_SCL_PIN,GPIO_PIN_RESET)

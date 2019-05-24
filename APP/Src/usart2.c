@@ -19,6 +19,7 @@ UART_HandleTypeDef UART2_Handler; //UART2¾ä±ú
 UART_RX UART2_RX;
 
 u16 pm25;
+float HCHO_value=0;
 //int rx5_cnt=0;
 
 /**
@@ -86,6 +87,7 @@ void UART2_RX_task(void)
 {	
 //    char uart_temp[60];	
 //	  u16 i;
+	   u16 HCHO_temp;
 	
 		if(UART2_RX.con_flag==1)
 		{
@@ -95,6 +97,8 @@ void UART2_RX_task(void)
 			UART2_RX.check=0;
 			
 			pm25=(UART2_RX.rx_buf[12]<<8)|UART2_RX.rx_buf[13];
+			HCHO_temp=(UART2_RX.rx_buf[28]<<8)|UART2_RX.rx_buf[29];
+			HCHO_value=(float)HCHO_temp/1000;
 							
 		}
 		

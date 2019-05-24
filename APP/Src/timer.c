@@ -5,26 +5,7 @@
 
 
 /*********************************************************************************
-			  ___   _     _____  _____  _   _  _____  _____  _   __
-			 / _ \ | |   |_   _||  ___|| \ | ||_   _||  ___|| | / /
-			/ /_\ \| |     | |  | |__  |  \| |  | |  | |__  | |/ /
-			|  _  || |     | |  |  __| | . ` |  | |  |  __| |    \
-			| | | || |_____| |_ | |___ | |\  |  | |  | |___ | |\  \
-			\_| |_/\_____/\___/ \____/ \_| \_/  \_/  \____/ \_| \_/
 
- *	******************************************************************************
- *	本程序只供学习使用，未经作者许可，不得用于其它任何用途
- *	ALIENTEK Pandora STM32L475 IOT开发板
- *	定时器中断驱动代码
- *	正点原子@ALIENTEK
- *	技术论坛:www.openedv.com
- *	创建日期:2018/10/27
- *	版本：V1.0
- *	版权所有，盗版必究。
- *	Copyright(C) 广州市星翼电子科技有限公司 2014-2024
- *	All rights reserved
- *	******************************************************************************
- *	初始版本
  *	******************************************************************************/
 
 
@@ -97,20 +78,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     if(htim == (&TIM3_Handler))
     {
-			//
-      if(UART5_RX.rx_flag==1)
+			//AT指令以时间断帧，
+			//if(run.uart5_cnt<0xffff&&UART5_RX.rx_flag==1)
+			if(run.uart5_cnt<0xffff&&UART5_RX.rx_flag==1)
 			{
-				if(run.uart5_cnt<0xffff)
-				{
-					run.uart5_cnt++;
-					if(run.uart5_cnt>10)
-					{
-						UART5_RX.con_flag=0;
-						UART5_RX.rx_cnt=0;
-						UART5_RX.rx_flag=0;
-					}
-				}
-		  }
+				run.uart5_cnt++;
+			}
 			
       if(UART2_RX.rx_flag==1)
 			{
@@ -139,6 +112,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				{
 					run.TEST_cnt++;
 				}				
+			}
+			if(run.IDOG_cnt<0xffff)
+			{
+				run.IDOG_cnt++;
 			}	
+			if(run.WIFI_RST_cnt<0xffffffff)
+			{
+				run.WIFI_RST_cnt++;
+			}	
+			
     }
 }

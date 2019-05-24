@@ -6,7 +6,7 @@
 
 typedef struct _uart_rx_ {
  
-	u8 rx_buf[50];
+	u8 rx_buf[128];
 	u16 rx_cnt;
 	u8 rx_flag;
 	u8 con_flag;

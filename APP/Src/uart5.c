@@ -4,6 +4,8 @@
 #include "string.h"
 #include "delay.h"
 #include "timer.h"
+#include "FlashFile.h"
+#include "main.h"
 
 //串口5中断服务程序
 //注意,读取USARTx->SR能避免莫名其妙的错误
@@ -25,8 +27,7 @@ int rx5_cnt=0;
  * @param	bound	串口波特率
  *
  * @return  void
- */
-void uart5_init(u32 bound)
+ */void uart5_init(u32 bound)
 {
     //UART 初始化设置
 	
@@ -59,16 +60,13 @@ void UART5_IRQHandler(void)
 {
     u8 Res;
 
-    if((__HAL_UART_GET_FLAG(&UART5_Handler, UART_FLAG_RXNE) != RESET)) //接收中断(接收到的数据必须是0x0d 0x0a结尾)
+    if((__HAL_UART_GET_FLAG(&UART5_Handler, UART_FLAG_RXNE) != RESET)) //接收中断
     {
 			UART5_RX.rx_flag=1;			
       HAL_UART_Receive(&UART5_Handler, &Res, 1, 1000);
 
       UART5_RX.rx_buf[UART5_RX.rx_cnt]=Res;
-			if((UART5_RX.rx_buf[UART5_RX.rx_cnt]=='D')&&(UART5_RX.rx_buf[UART5_RX.rx_cnt-1]=='N') &&(UART5_RX.rx_buf[UART5_RX.rx_cnt-2]=='E')&&(UART5_RX.rx_buf[UART5_RX.rx_cnt-3]=='#'))
-			{
-				UART5_RX.con_flag=1;
-			}
+
 			UART5_RX.rx_cnt++;
     }
     HAL_UART_IRQHandler(&UART5_Handler);
@@ -76,67 +74,31 @@ void UART5_IRQHandler(void)
 
 void UART5_RX_task(void)
 {	
-    char uart_temp[60];	
-	  u16 i;
-	
-		if(UART5_RX.con_flag==1)
+#if WIFI		
+	  if(run.WIFI_RST_cnt>130000)
 		{
-			UART5_RX.con_flag=0;
-			UART5_RX.rx_cnt=0;
-			UART5_RX.rx_flag=0;
-			
-			if((UART5_RX.rx_buf[0]=='#')&&(UART5_RX.rx_buf[1]=='R')&&(UART5_RX.rx_buf[2]=='T')&&(UART5_RX.rx_buf[3]=='#'))
+			run.WIFI_RST_cnt=0;
+			RST_WIFI();   //wifi复位
+		}				
+	
+	  if(run.uart5_cnt>20) //20ms接收到一帧数据。
+		{		
+			if (strstr((const char *)UART5_RX.rx_buf, "publish success") != NULL)
 			{
-				RTC_Set_Time(UART5_RX.rx_buf[4], UART5_RX.rx_buf[5], UART5_RX.rx_buf[6], RTC_HOURFORMAT12_PM);	     //设置时间 ,根据实际时间修改
+        run.WIFI_RST_cnt=0;
 			}
 
-			if((UART5_RX.rx_buf[0]=='#')&&(UART5_RX.rx_buf[1]=='R')&&(UART5_RX.rx_buf[2]=='D')&&(UART5_RX.rx_buf[3]=='#'))
-			{ 
-        RTC_Set_Date(UART5_RX.rx_buf[4], UART5_RX.rx_buf[5], UART5_RX.rx_buf[6],UART5_RX.rx_buf[7]);		                 //设置日期
-			}
-			//读取flash
-			if((UART5_RX.rx_buf[0]=='#')&&(UART5_RX.rx_buf[1]=='R')&&(UART5_RX.rx_buf[2]=='R')&&(UART5_RX.rx_buf[3]=='#'))
-			{ 
-				run.uart5tx_flag=1;
-        //读取flash
-//				W25QXX_ReadCNT();
-//				W25Q128_CNTT=0xFFFF;
-//				sprintf((char*)uart_temp, "flashCNT:%d\n",W25Q128_CNTT );
-//			  HAL_UART_Transmit(&UART5_Handler,(uint8_t *)uart_temp,strlen((char *)uart_temp),1);				
-//				HAL_UART_Transmit(&UART5_Handler,(uint8_t *)"\n",1,1);
-				
-        for(i=0;i<W25Q128_CNTT;i++)
-				{
-					W25QXX_Read((u8*)uart_temp,i*60+2,60);
-					HAL_UART_Transmit(&UART5_Handler,(uint8_t *)uart_temp,strlen((char *)uart_temp),1);
-					delay_ms(10);
-				}
-//				run.uart5tx_flag=0;
-			}
-
-			//擦除flash
-			if((UART5_RX.rx_buf[0]=='#')&&(UART5_RX.rx_buf[1]=='R')&&(UART5_RX.rx_buf[2]=='E')&&(UART5_RX.rx_buf[3]=='#'))
-			{ 
-				run.uart5tx_flag=1;
-        //擦除flash
-//					W25Q128_CNTT=0;
-//					W25QXX_WriteCNT();
-//        for(i=0;i<W25Q128_CNTT;i++)
-//				{
-//					W25QXX_Read((u8*)uart_temp,i*60+2,60);
-//					HAL_UART_Transmit(&UART5_Handler,(uint8_t *)uart_temp,strlen((char *)uart_temp),1);
-//					delay_ms(10);
-//				}
-//				run.uart5tx_flag=0;
-			}	
-			if((UART5_RX.rx_buf[0]=='#')&&(UART5_RX.rx_buf[1]=='R')&&(UART5_RX.rx_buf[2]=='X')&&(UART5_RX.rx_buf[3]=='#'))
-			{ 
-
-				run.uart5tx_flag=0;
-			}					
+			//串口复位
+			run.uart5_cnt=0;
+			UART5_RX.rx_cnt=0;
+      UART5_RX.rx_flag=0;	
+			memset(UART5_RX.rx_buf, 0, sizeof UART5_RX.rx_buf);
 		}
+#endif		
 		
 }
+
+
 
 
 

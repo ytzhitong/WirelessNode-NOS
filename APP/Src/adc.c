@@ -74,12 +74,12 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 //    HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
 
     __HAL_RCC_ADC1_CLK_ENABLE();            //使能ADC1时钟
-    __HAL_RCC_GPIOC_CLK_ENABLE();			//开启GPIOC时钟
+    __HAL_RCC_GPIOA_CLK_ENABLE();			//开启GPIOC时钟
 
-    GPIO_Initure.Pin = GPIO_PIN_4;          //PC2
+    GPIO_Initure.Pin = GPIO_PIN_7;          //PC7
     GPIO_Initure.Mode = GPIO_MODE_ANALOG;   //模拟
     GPIO_Initure.Pull = GPIO_NOPULL;        //不带上下拉
-    HAL_GPIO_Init(GPIOC, &GPIO_Initure);
+    HAL_GPIO_Init(GPIOA, &GPIO_Initure);
 }
 /**
  * @brief	获得ADC值

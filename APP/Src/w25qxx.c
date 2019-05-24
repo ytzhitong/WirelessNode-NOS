@@ -18,8 +18,6 @@
 
 u16 W25QXX_TYPE=W25Q128;	//默认是W25Q128
 
-u8 W25Q128_CNT[2];
-u16 W25Q128_CNTT;
 
 //4Kbytes为一个Sector
 //16个扇区为1个Block
@@ -43,6 +41,8 @@ void W25QXX_Init(void)
  
   W25QXX_CS(1);				//SPI FLASH不选中
 	SPI2_Init();		   	//初始化SPI
+	
+  W25QXX_WAKEUP();	
 //	SPI2_SetSpeed(SPI_BaudRatePrescaler_2);//设置为18M时钟,高速模式
 	W25QXX_TYPE=W25QXX_ReadID();//读取FLASH ID.  
 

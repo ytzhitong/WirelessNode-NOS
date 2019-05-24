@@ -9,11 +9,18 @@ float HexToDecimal(unsigned char *Byte,int num)
 
 void DecimalToHex(float floatnum, char* Byte)
 {
+	char pchar1[4];
 	char* pchar=(char*)&floatnum;
+
 	for(int i=0;i<sizeof(float);i++)
 	{
-		*Byte=*pchar;
+		pchar1[3-i]=*pchar;
 		pchar++;
+	}	
+	
+	for(int i=0;i<sizeof(float);i++)
+	{
+		*Byte=pchar1[i];
 		Byte++;
 	}
 }
